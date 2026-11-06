@@ -4,7 +4,7 @@ using System.Linq;
 
 using UnityEngine;
 
-public class TerrainSpawner : MonoBehaviour
+public class TerrainSpawner : MonoBehaviour, ICoralSpawnService
 {
     public Terrain terrain; // Ziehe das Terrain-Objekt hier hinein
     public int textureIndex; // Der Index der Textur, die du überprüfen möchtest
@@ -140,6 +140,8 @@ public class TerrainSpawner : MonoBehaviour
             return GetRandomPositionOnPlane();
         }
     }
+
+    public float GetScore() => GetCoralScore();
 
     public float GetCoralScore(){
         for (int i = createdCorals.Count - 1; i >= 0; i--)

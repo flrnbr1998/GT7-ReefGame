@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrashSpawnerScript : MonoBehaviour
+public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
 {
     public GameObject[] objectsToSpawn; // Eine Liste der Objekte, die du fallen lassen mÃ¶chtest
     public float spawnInterval = 20f; // Das Intervall, in dem Objekte spawnen
@@ -22,6 +22,10 @@ public class TrashSpawnerScript : MonoBehaviour
     {
 
     }
+
+    public GameObject SpawnTrash() => SpawnRandomObject();
+
+    public float GetScore() => getTrashScore();
 
     public GameObject SpawnRandomObject()
     {

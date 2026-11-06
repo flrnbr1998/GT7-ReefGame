@@ -31,9 +31,9 @@
 - [x] `CoralColorEffectService` — aus `CoralColorManager` extrahiert
 
 ### Block D — MonoBehaviours refactoren
-- [ ] `RiffGameLoop` — ersetzt `RiffController` (nur Timer, injizierte Services)
-- [ ] `TrashPickupHandler` — ersetzt `DestroyObject` (kein TiltFive-Import)
-- [ ] `PlayerController` — eine saubere Klasse aus den zwei `PlayerControll`-Duplikaten
+- [x] `RiffGameLoop` — ersetzt `RiffController` (nur Timer, injizierte Services)
+- [x] `TrashPickupHandler` — ersetzt `DestroyObject` (kein TiltFive-Import)
+- [x] `PlayerController` — eine saubere Klasse aus den zwei `PlayerControll`-Duplikaten
 
 ### Block E — Replayability
 - [ ] Restart-Mechanismus (Score reset → neue Runde starten)

@@ -18,5 +18,12 @@ public class GameLifetimeScope : LifetimeScope
 
         // MonoBehaviour services (must exist in scene)
         builder.RegisterComponentInHierarchy<CoralColorEffectService>().AsImplementedInterfaces();
+        builder.RegisterComponentInHierarchy<TerrainSpawner>().AsImplementedInterfaces();
+        builder.RegisterComponentInHierarchy<TrashSpawnerScript>().AsImplementedInterfaces();
+
+        // MonoBehaviours that receive injection
+        builder.RegisterComponentInHierarchy<RiffGameLoop>();
+        builder.RegisterComponentInHierarchy<TrashPickupHandler>();
+        builder.RegisterComponentInHierarchy<PlayerController>();
     }
 }
