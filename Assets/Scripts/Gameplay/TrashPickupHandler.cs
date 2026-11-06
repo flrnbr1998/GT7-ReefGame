@@ -1,12 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using VContainer;
 
 public class TrashPickupHandler : MonoBehaviour
 {
     [SerializeField] private float speed = 20f;
-
-    [Inject] private IInputService _input;
 
     private bool _flying;
     private Rigidbody _rb;

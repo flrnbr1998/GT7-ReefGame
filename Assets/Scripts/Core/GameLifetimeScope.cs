@@ -23,7 +23,7 @@ public class GameLifetimeScope : LifetimeScope
 
         // MonoBehaviours that receive injection
         builder.RegisterComponentInHierarchy<RiffGameLoop>();
-        builder.RegisterComponentInHierarchy<TrashPickupHandler>();
         builder.RegisterComponentInHierarchy<PlayerController>();
+        // TrashPickupHandler is runtime-instantiated — injected via container.InjectGameObject() in TrashSpawnerScript
     }
 }
