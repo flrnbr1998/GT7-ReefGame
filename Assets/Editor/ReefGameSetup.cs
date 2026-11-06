@@ -22,6 +22,7 @@ public static class ReefGameSetup
     {
         SetupLifetimeScope();
         SetupCoralColorEffectService();
+        SetupPickupInputHandler();
         MigrateRiffController();
         MigratePlayerController();
         MigrateTrashPrefabs();
@@ -58,6 +59,20 @@ public static class ReefGameSetup
         go.AddComponent<CoralColorEffectService>();
         Undo.RegisterCreatedObjectUndo(go, "Setup CoralColorEffectService");
         Debug.Log("[ReefGame] CoralColorEffectService added.");
+    }
+
+    private static void SetupPickupInputHandler()
+    {
+        if (Object.FindObjectOfType<PickupInputHandler>() != null)
+        {
+            Debug.Log("[ReefGame] PickupInputHandler already in scene.");
+            return;
+        }
+
+        var go = new GameObject("PickupInputHandler");
+        go.AddComponent<PickupInputHandler>();
+        Undo.RegisterCreatedObjectUndo(go, "Setup PickupInputHandler");
+        Debug.Log("[ReefGame] PickupInputHandler added.");
     }
 
     // ── Migrations ───────────────────────────────────────────────────────────

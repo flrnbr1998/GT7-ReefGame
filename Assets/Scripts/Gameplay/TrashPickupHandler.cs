@@ -15,8 +15,6 @@ public class TrashPickupHandler : MonoBehaviour
         _cam = FindCamera();
     }
 
-    private void OnMouseDown() => StartPickup();
-
     public void StartPickup()
     {
         if (_flying) return;
