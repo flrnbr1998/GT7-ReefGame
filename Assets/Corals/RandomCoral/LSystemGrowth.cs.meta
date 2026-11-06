@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 681eed5f9d6a38743aab5a1d11ca0192
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - coralMaterial: {instanceID: 0}
+  - branchPrefab: {fileID: 4676925354981605925, guid: a6a51ccdfd93649c0b8caee621e5446e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

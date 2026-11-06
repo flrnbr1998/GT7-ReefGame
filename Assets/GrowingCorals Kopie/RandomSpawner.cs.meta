@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6ba7fa7e2010c21409f9861210f5fee2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - objectToSpawn: {fileID: 854679221498002045, guid: 26e987f6bd1bf4d86bab11d3d7e71362, type: 3}
+  - coralMaterial: {fileID: 2100000, guid: 13c38118133ca2241b5603d9432772c9, type: 2}
+  - treePrefab: {fileID: 2049506892133396965, guid: 40f8b23905e454610b4fe141e35bc36c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
