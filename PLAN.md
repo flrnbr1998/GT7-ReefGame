@@ -25,10 +25,10 @@
 - [x] `IColorEffectService` — `TriggerBleach()`, `TriggerRecolor()`
 
 ### Block C — Implementierungen
-- [ ] `WellnessService` — reine C#-Klasse, kein MonoBehaviour
-- [ ] `StubAudioService` — No-op Implementierung (kein FMOD nötig für PC-Build)
-- [ ] `PCInputService` — Maus/Keyboard ersetzt TiltFive
-- [ ] `CoralColorEffectService` — aus `CoralColorManager` extrahiert
+- [x] `WellnessService` — reine C#-Klasse, kein MonoBehaviour
+- [x] `StubAudioService` — No-op Implementierung (kein FMOD nötig für PC-Build)
+- [x] `PCInputService` — Maus/Keyboard ersetzt TiltFive
+- [x] `CoralColorEffectService` — aus `CoralColorManager` extrahiert
 
 ### Block D — MonoBehaviours refactoren
 - [ ] `RiffGameLoop` — ersetzt `RiffController` (nur Timer, injizierte Services)
