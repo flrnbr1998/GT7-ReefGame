@@ -11,8 +11,8 @@ public class TrashPickupHandler : MonoBehaviour
 
     private void Start()
     {
-        _rb = GetComponent<Rigidbody>();
-        _cam = Camera.main;
+        _rb  = GetComponent<Rigidbody>();
+        _cam = FindCamera();
     }
 
     private void OnMouseDown() => StartPickup();
@@ -29,15 +29,15 @@ public class TrashPickupHandler : MonoBehaviour
     {
         while (_flying)
         {
-            if (_cam == null) _cam = Camera.main;
+            if (_cam == null) _cam = FindCamera();
             if (_cam == null) { yield return null; continue; }
 
             Vector3 direction = (_cam.transform.position - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
+            transform.position  += direction * speed * Time.deltaTime;
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, Time.deltaTime);
 
-            Vector3 vp = _cam.WorldToViewportPoint(transform.position);
-            bool offScreen = vp.z <= 0 || vp.x < 0 || vp.x > 1 || vp.y < 0 || vp.y > 1;
+            Vector3 vp       = _cam.WorldToViewportPoint(transform.position);
+            bool    offScreen = vp.z <= 0 || vp.x < 0 || vp.x > 1 || vp.y < 0 || vp.y > 1;
 
             if (offScreen || transform.localScale.magnitude < 0.01f)
             {
@@ -47,5 +47,12 @@ public class TrashPickupHandler : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    // Mirror original DestroyObject behaviour: use allCameras[0] as fallback
+    private static Camera FindCamera()
+    {
+        if (Camera.main != null) return Camera.main;
+        return Camera.allCameras.Length > 0 ? Camera.allCameras[0] : null;
     }
 }
