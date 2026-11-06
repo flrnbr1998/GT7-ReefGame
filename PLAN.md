@@ -17,12 +17,12 @@
 - [ ] Unity öffnen & VContainer-Import bestätigen (kein Compile-Fehler)
 
 ### Block B — Interfaces
-- [ ] `IWellnessService` — Score berechnen, `OnScoreChanged`-Event
-- [ ] `ICoralSpawnService` — `SpawnCoral()`, `GetScore()`
-- [ ] `ITrashSpawnService` — `SpawnTrash()`, `GetScore()`
-- [ ] `IAudioService` — `SetMusicParameter()`, `PlayOneShot()`
-- [ ] `IInputService` — `IsPickupTriggered()`, `GetPointerRay()`
-- [ ] `IColorEffectService` — `TriggerBleach()`, `TriggerRecolor()`
+- [x] `IWellnessService` — Score berechnen, `OnScoreChanged`-Event
+- [x] `ICoralSpawnService` — `SpawnCoral()`, `GetScore()`
+- [x] `ITrashSpawnService` — `SpawnTrash()`, `GetScore()`
+- [x] `IAudioService` — `SetMusicParameter()`, `PlayOneShot()`
+- [x] `IInputService` — `IsPickupTriggered()`, `GetPointerRay()`
+- [x] `IColorEffectService` — `TriggerBleach()`, `TriggerRecolor()`
 
 ### Block C — Implementierungen
 - [ ] `WellnessService` — reine C#-Klasse, kein MonoBehaviour
