@@ -24,6 +24,7 @@ public static class ReefGameSetup
         SetupCoralColorEffectService();
         MigrateRiffController();
         MigratePlayerController();
+        MigrateTrashPrefabs();
         EditorUtility.SetDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects()[0]);
         Debug.Log("[ReefGame] Scene setup complete. Save the scene (Ctrl+S) to persist changes.");
     }
@@ -116,6 +117,46 @@ public static class ReefGameSetup
         newSo.ApplyModifiedProperties();
         Undo.DestroyObjectImmediate(old);
         Debug.Log("[ReefGame] " + typeof(T).Name + " → PlayerController on '" + go.name + "'.");
+    }
+
+    // ── Prefab migration ─────────────────────────────────────────────────────
+
+    private static void MigrateTrashPrefabs()
+    {
+        string[] guids = AssetDatabase.FindAssets("t:Prefab");
+        int count = 0;
+
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null) continue;
+
+            var old = prefab.GetComponent<DestroyObject>();
+            if (old == null) continue;
+
+            using (var scope = new PrefabUtility.EditPrefabContentsScope(path))
+            {
+                var root = scope.prefabContentsRoot;
+                var oldComp = root.GetComponent<DestroyObject>();
+                if (oldComp == null) continue;
+
+                float speed = oldComp.speed;
+
+                var newComp = root.AddComponent<TrashPickupHandler>();
+                var so = new SerializedObject(newComp);
+                so.FindProperty("speed").floatValue = speed;
+                so.ApplyModifiedProperties();
+
+                Object.DestroyImmediate(oldComp);
+                count++;
+            }
+        }
+
+        if (count > 0)
+            Debug.Log($"[ReefGame] Migrated DestroyObject → TrashPickupHandler on {count} prefab(s).");
+        else
+            Debug.Log("[ReefGame] No prefabs with DestroyObject found.");
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
