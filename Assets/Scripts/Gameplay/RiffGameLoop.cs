@@ -27,6 +27,11 @@ public class RiffGameLoop : MonoBehaviour
             Debug.LogError("[RiffGameLoop] WellnessConfig not assigned — drag Assets/Settings/WellnessConfig.asset into the Config field.", this);
             return;
         }
+        if (_wellness == null)
+        {
+            Debug.LogError("[RiffGameLoop] IWellnessService not injected — VContainer failed to build. Run ReefGame > Setup Phase 1 Scene to add missing components, then restart Play Mode.", this);
+            return;
+        }
         _wellness.OnScoreChanged += OnScoreChanged;
         RenderSettings.fog = true;
         StartCoroutine(FactLoop());
@@ -36,7 +41,7 @@ public class RiffGameLoop : MonoBehaviour
 
     private void Update()
     {
-        if (config == null) return;
+        if (config == null || _wellness == null) return;
         _coralTimer += Time.deltaTime;
         _trashTimer += Time.deltaTime;
 
