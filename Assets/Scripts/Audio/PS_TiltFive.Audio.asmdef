@@ -2,7 +2,8 @@
     "name": "PS_TiltFive.Audio",
     "rootNamespace": "",
     "references": [
-        "PS_TiltFive.Core"
+        "PS_TiltFive.Core",
+        "FMODUnity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
