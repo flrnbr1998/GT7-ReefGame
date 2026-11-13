@@ -56,9 +56,8 @@ public static class ReefSceneSetup
         if (Object.FindObjectOfType<PickupFeedbackService>() == null)
         {
             var go  = CreateGO("PickupFeedbackService");
-            var svc = go.AddComponent<PickupFeedbackService>();
-            var ps  = go.AddComponent<ParticleSystem>();
-            SetField(svc, "pickupEffect", ps);
+            go.AddComponent<PickupFeedbackService>();
+            // pickupEffect left null — assign a particle prefab with a valid material manually
         }
 
         Debug.Log("[ReefSetup] Service objects done.");

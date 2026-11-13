@@ -24,7 +24,8 @@ public class TrashHighlight : MonoBehaviour, IHighlightable
 
     public void Unhighlight()
     {
+        var empty = new MaterialPropertyBlock();
         foreach (Renderer r in _renderers)
-            r.SetPropertyBlock(null);
+            r.SetPropertyBlock(empty);
     }
 }
