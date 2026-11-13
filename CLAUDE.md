@@ -2,7 +2,7 @@
 
 ## Projekt-Übersicht
 
-Interaktives Riff-Erlebnis. Der Spieler bereinigt einen virtuellen Korallenriff von Müll und beobachtet, wie sich der Wellness-Score des Riffs verändert. Korallen wachsen prozedural per L-System.
+Interaktives Cleaning-Game. Der Spieler bereinigt einen virtuellen Korallenriff von Müll, pflanzt Korallen und beobachtet, wie das Ökosystem zurückkommt. Wellness-Score steuert Bleaching/Recoloring, Spawn-Timing und das Zurückkehren von Tieren. Korallen wachsen prozedural per L-System.
 
 **Unity:** 2021.3.11f1 LTS  
 **Render Pipeline:** Built-in (kein URP)  
@@ -28,23 +28,32 @@ Interaktives Riff-Erlebnis. Der Spieler bereinigt einen virtuellen Korallenriff 
 Aktuelle Architektur: **VContainer Dependency Injection** (Clean Architecture, Branch `refactor/vcontainer-clean-arch`)
 
 ```
-GameLifetimeScope          — VContainer-Composition-Root (Assets/Scripts/)
+GameLifetimeScope               — VContainer-Composition-Root (Assets/Scripts/Infrastructure/)
 │
-├── PS_TiltFive.Core       — Interfaces, Services, Config (kein VContainer-Import nötig)
-│   ├── Interfaces/        — IWellnessService, ICoralSpawnService, ITrashSpawnService,
-│   │                        IAudioService, IInputService, IColorEffectService,
-│   │                        IColorable, ISpawnable, ICombinable
-│   ├── Services/          — WellnessService (pure C#), CoralColorEffectService (MB)
-│   └── Config/            — WellnessConfig (ScriptableObject)
+├── PS_TiltFive.Core            — Interfaces, Services, Config (kein VContainer-Import nötig)
+│   ├── Interfaces/             — IWellnessService, ICoralSpawnService, ITrashSpawnService,
+│   │                             IAudioService, IInputService, IColorEffectService,
+│   │                             IColorable, ISpawnable, ICombinable
+│   │                             — [GEPLANT] IHUDService, IHighlightable, IFeedbackService,
+│   │                             IAnimalSpawnService, IReefZone, IReefZoneService, IReefStateService
+│   ├── Services/               — WellnessService (pure C#), CoralColorEffectService (MB)
+│   │                             — [GEPLANT] ReefStateService (pure C#)
+│   └── Config/                 — WellnessConfig (ScriptableObject)
+│                                 — [GEPLANT] AnimalType (enum), ReefState (enum)
 │
-├── PS_TiltFive.Gameplay   — RiffGameLoop, PlayerController, TrashPickupHandler, PickupInputHandler
-├── PS_TiltFive.Audio      — StubAudioService (Entwicklung/Test), AudioManager/FMODEvents (FMOD-Build)
-├── PS_TiltFive.Input      — PCInputService (Keyboard + Maus)
+├── PS_TiltFive.Gameplay        — RiffGameLoop, PlayerController, TrashPickupHandler,
+│                                 PickupInputHandler, TerrainSpawner, TrashSpawnerScript,
+│                                 CoralGrowthBase + alle Subklassen, Tierbewegungen
+│                                 — [GEPLANT] CoralPlantHandler, HUDController,
+│                                 TrashHighlightHandler, AnimalSpawnService,
+│                                 ReefZone, ReefZoneManager, PickupFeedbackService
+├── PS_TiltFive.Audio           — StubAudioService (Entwicklung/Test), AudioManager/FMODEvents (FMOD-Build)
+├── PS_TiltFive.Input           — PCInputService (Keyboard + Maus)
 │
-└── Assembly-CSharp        — TerrainSpawner, TrashSpawnerScript, alte Scripts, GameLifetimeScope
+└── Assembly-CSharp             — (nur noch nicht-migrierte Assets-Skripte)
 ```
 
-**Alte Klassen (noch im Repo, ersetzt):** `RiffController` → `RiffGameLoop`, `PlayerControll` → `PlayerController`, `DestroyObject` → `TrashPickupHandler`, `CoralColorManager` → `CoralColorEffectService`
+**Migrierte Klassen:** `RiffController` → `RiffGameLoop`, `PlayerControll` → `PlayerController`, `DestroyObject` → `TrashPickupHandler`, `CoralColorManager` → `CoralColorEffectService` (gelöscht)
 
 ### Wellness-Formel
 
@@ -56,7 +65,20 @@ wellnessScore = 1f + (coralScore * 0.01 * coralValue) - (trashScore * 0.01 * tra
 - Bereich: `0.0` – `2.0`
 - `< 0.8` → Bleaching-Effekt ausgelöst
 - `> 1.1` → Recoloring-Effekt ausgelöst
-- `== 0` → alle DestroyObject-Objekte werden nach 60s zerstört, Score reset auf 1.0
+- `== 0` → alle TrashPickupHandler-Objekte werden nach 60s zerstört, Score reset auf 1.0
+
+### ReefState-Schwellenwerte (geplant)
+
+`ReefState` (enum in `Core/`) wird von `ReefStateService` aus dem Wellness-Score abgeleitet und steuert, welche Tiere zurückkehren:
+
+| Wellness-Score | ReefState | Tier-Rückkehr |
+|---------------|-----------|---------------|
+| `< 1.2` | `Degraded` | keine Tiere |
+| `>= 1.2` | `Recovering` | Krabbe spawnt |
+| `>= 1.4` | `Recovering` | Schildkröte spawnt |
+| `>= 1.6` | `Restored` | Mantarochen spawnt |
+
+`AnimalType` (enum): `Crab`, `Turtle`, `MantaRay`, `Shark`
 
 ### Spawn-Timing (dynamisch)
 
@@ -71,7 +93,7 @@ Je schlechter der Score, desto schneller spawnt Müll und langsamer Korallen.
 
 ## L-System Korallenwachstum
 
-`Assets/GrowingCorals Kopie/` — Verschiedene Korallen-Typen:
+`Assets/Scripts/Gameplay/` — Verschiedene Korallen-Typen:
 
 | Klasse | Datei | Wachstums-Art |
 |--------|-------|---------------|
@@ -79,7 +101,7 @@ Je schlechter der Score, desto schneller spawnt Müll und langsamer Korallen.
 | `BubbleCoralGrowth` | `BubbleCoralGrowth.cs` | Kugelförmig |
 | `RandomCoralGrowth` | `RandomCoralGrowth.cs` | Zufällig |
 | `TreeCoralGrowth` | `TreeCoralGrowth.cs` | Baumartig |
-| `StaghornCoralGrowth` | `Stackhorn/TreeGrowth.cs` | Geweih-Koralle |
+| `StaghornCoralGrowth` | `TreeGrowth.cs` | Geweih-Koralle |
 
 ---
 
@@ -123,11 +145,27 @@ Musik-Paramter `"MusicToxic"` hat 10 Werte (A–J), gesteuert durch Wellness-Sco
 
 ## Bekannte Probleme / TODOs
 
-Offene Issues (GitHub): [#1 CoralColorManager](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/1) · [#2 Object Pool](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/2) · [#3 FMOD-Pfade](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/3) · [#4 CI/CD](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/4)
+Offene Issues (GitHub): [#2 Object Pool](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/2) · [#3 FMOD-Pfade](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/3) · [#4 CI/CD](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/4)
 
-- **[#1 MANUELL]** `CoralColorManager` noch in `Riff.unity` (Zeile ~11899) — in Unity Editor durch `CoralColorEffectService` ersetzen, dann `CoralColorManager.cs` löschen
 - **[#3 TODO]** FMOD-Eventpfade in `FMODEvents.cs` gegen FMOD Studio verifizieren (alle `const string` Pfade mit `// TODO: verify` markiert)
 - Tierprefabs (Schildkröte, Hai, Krabbe, Rochen) sind UniGLTF-abhängig
+
+### Geplante Features (Implementierungsreihenfolge)
+
+**Phase 1 — Core Gameplay Loop (Deliverable 1):**
+- **[TODO]** `CoralPlantHandler` — Koralle pflanzen per Raycast auf Sand-Terrain, Prefab-Auswahl per `ICoralSpawnService`
+- **[TODO]** `HUDController` + `IHUDService` — Wellness-Anzeige, Zonen-Progress, Tier-Rückkehr-Meldungen
+- **[TODO]** `TrashHighlightHandler` + `IHighlightable` — Outline/Glow auf Müll in Reichweite des Spielers
+- **[TODO]** `PickupFeedbackService` + `IFeedbackService` — Partikel + Sound bei Pickup (Juiciness)
+- **[TODO]** `ReefStateService` + `IReefStateService` — ReefState aus Wellness ableiten, `OnReefStateChanged` feuern
+- **[TODO]** `AnimalSpawnService` + `IAnimalSpawnService` — Tiere per ReefState-Event spawnen/despawnen
+- **[TODO]** Replayability-Loop — Endscreen (Score, Zeit, Tiere zurück), Restart ohne Unity-Reload
+
+**Phase 2 — Juice & Meta (Deliverable 2):**
+- **[TODO]** `ReefZone` + `ReefZoneManager` + `IReefZone`/`IReefZoneService` — Riff in räumliche Zonen aufteilen, Zone-Cleanliness-Tracking
+- **[TODO]** Object Pool für Trash-Prefabs ([#2](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/2))
+- **[TODO]** CI/CD-Pipeline ([#4](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/4))
+- **[TODO]** Persistent Data (Highscores, freigeschaltete Korallen-Typen)
 
 ---
 
@@ -152,6 +190,8 @@ Offene Issues (GitHub): [#1 CoralColorManager](https://github.com/flrnbr1998/PS_
 | Component | Structural | MonoBehaviours als Komponenten-Komposition |
 | Observer | Behavioral | `IWellnessService.OnScoreChanged` (C# Event), VContainer-Injection statt UnityEvents |
 | Command | Behavioral | Pickup-Aktion in `PickupInputHandler` / `TrashPickupHandler` |
+| State | Behavioral | `ReefStateService` — `ReefState` enum (Degraded/Recovering/Restored) steuert Tier-Spawn |
+| Strategy | Behavioral | `IHighlightable` — austauschbare Highlight-Implementierung für TrashHighlightHandler |
 
 Ressourcen: [Game Programming Patterns](https://gameprogrammingpatterns.com/contents.html) · [Unity SOLID eBook](https://unity.com/resources/design-patterns-solid-ebook)
 
@@ -159,13 +199,13 @@ Ressourcen: [Game Programming Patterns](https://gameprogrammingpatterns.com/cont
 
 Das Projekt folgt einem layered DDD-Ansatz:
 
-- **Ubiquitous Language:** Begriffe aus dem Riff-Domänen-Modell konsequent in Code verwenden: `Wellness`, `Coral`, `Trash`, `Bleach`, `Recolor` — nicht `health`, `plant`, `garbage`
-- **Entities:** Korallen- und Müll-GameObjects (haben Identität + Lebenszyklus)
+- **Ubiquitous Language:** Begriffe aus dem Riff-Domänen-Modell konsequent in Code verwenden: `Wellness`, `Coral`, `Trash`, `Bleach`, `Recolor`, `Zone`, `Cleanliness`, `Restoration`, `Degradation`, `Animal`, `Highlight`, `ReefState` — nicht `health`, `plant`, `garbage`, `region`, `dirty`, `fix`, `creature`
+- **Entities:** Korallen- und Müll-GameObjects (haben Identität + Lebenszyklus); `ReefZone` (hat Identität + Cleanliness-Zustand)
 - **Value Objects:** `WellnessConfig` (unveränderliche Konfiguration)
-- **Services:** `WellnessService`, `CoralColorEffectService` — zustandsbehaftete Domain-Logik ohne UI
-- **Events:** `OnScoreChanged` → löst Bleaching/Recoloring/Audio-Änderungen aus (Domain Event)
-- **Repository-Muster:** `TerrainSpawner` als Coral-Repository (kennt alle lebenden Korallen, gibt Score zurück)
-- **Layered Architecture:** Core (Domain) → Gameplay/Audio/Input (Application) → Assembly-CSharp (Infrastructure/Composition Root)
+- **Services:** `WellnessService`, `CoralColorEffectService`, `ReefStateService` — zustandsbehaftete Domain-Logik ohne UI
+- **Events:** `OnScoreChanged` → löst Bleaching/Recoloring/Audio-Änderungen aus (Domain Event); `OnReefStateChanged` → steuert Tier-Rückkehr
+- **Repository-Muster:** `TerrainSpawner` als Coral-Repository (kennt alle lebenden Korallen, gibt Score zurück); `ReefZoneManager` als Zone-Repository
+- **Layered Architecture:** Core (Domain) → Gameplay/Audio/Input (Application) → Infrastructure/Assembly-CSharp (Composition Root)
 
 Nächste Woche in der Vorlesung: **Event Storming + Physical Prototyping + Speccing**
 
@@ -185,8 +225,7 @@ Nächste Woche in der Vorlesung: **Event Storming + Physical Prototyping + Specc
 
 ### Bekannte D-Verstöße (mit TODO markiert)
 
-- `TrashSpawnerScript.cs:44` — `AudioManager.instance.PlayOneShot(...)` direkt → muss über `IAudioService` laufen
-- `CoralGrowthBase.cs:129` — `CoralColorManager.RegisterColorable(this)` → muss über injected `IColorEffectService` laufen
+- `CoralGrowthBase.cs:129` — `CoralColorManager.RegisterColorable(this)` → muss über injected `IColorEffectService` laufen (hängt an [#1](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/1) — CoralColorManager erst in Unity aus Szene entfernen)
 
 ### Verbindliche Coding-Regeln
 
