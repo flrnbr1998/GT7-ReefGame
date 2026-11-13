@@ -1,0 +1,17 @@
+{
+    "name": "PS_TiltFive.Gameplay",
+    "rootNamespace": "",
+    "references": [
+        "PS_TiltFive.Core",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -925,7 +925,7 @@ GameObject:
   - component: {fileID: 6298494718694015773}
   - component: {fileID: 8109937132501383127}
   - component: {fileID: 2192773647834171882}
-  - component: {fileID: 2202239433620060311}
+  - component: {fileID: 5755857850068651490}
   m_Layer: 0
   m_Name: CoralSeed
   m_TagString: Untagged
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b33c0ecce9fa4f449af41e4015b3e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2202239433620060311
+--- !u!114 &5755857850068651490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1031,11 +1031,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7749767704186263042}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab452c2d114c4447db147dbe3eaf8b0c, type: 3}
+  m_Script: {fileID: 11500000, guid: d782dcad109d664499b0897342fdb5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  mainCamera: {fileID: 0}
 --- !u!1 &8829520246882151070
 GameObject:
   m_ObjectHideFlags: 0

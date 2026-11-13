@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7824250391908508970}
   - component: {fileID: 8886947759824337330}
   - component: {fileID: 8886947759824337331}
-  - component: {fileID: 8886947759824337328}
+  - component: {fileID: -1538619601946965394}
   m_Layer: 0
   m_Name: becher
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8886947759824337328
+--- !u!114 &-1538619601946965394
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,8 +125,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8616985012983907583}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab452c2d114c4447db147dbe3eaf8b0c, type: 3}
+  m_Script: {fileID: 11500000, guid: d782dcad109d664499b0897342fdb5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  mainCamera: {fileID: 0}

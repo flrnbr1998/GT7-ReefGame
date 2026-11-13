@@ -1,0 +1,16 @@
+{
+    "name": "PS_TiltFive.Audio",
+    "rootNamespace": "",
+    "references": [
+        "PS_TiltFive.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

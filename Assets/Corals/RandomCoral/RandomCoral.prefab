@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 967246821990291597}
   - component: {fileID: 967246821990291596}
-  - component: {fileID: 8112600108297870579}
   - component: {fileID: -3460587242950458459}
   - component: {fileID: -4764068589831690726}
   - component: {fileID: -8713486983257833017}
   - component: {fileID: 4752613131272817211}
+  - component: {fileID: 196435495708573758}
   m_Layer: 0
   m_Name: RandomCoral
   m_TagString: Untagged
@@ -54,20 +54,6 @@ MonoBehaviour:
   growthSpeed: 0.1
   branchPrefab: {fileID: 7749767704186263042, guid: a6a51ccdfd93649c0b8caee621e5446e, type: 3}
   scale: {x: 0.75, y: 0.75, z: 0.75}
---- !u!114 &8112600108297870579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 967246821990291599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab452c2d114c4447db147dbe3eaf8b0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
-  mainCamera: {fileID: 0}
 --- !u!108 &-3460587242950458459
 Light:
   m_ObjectHideFlags: 0
@@ -193,3 +179,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 967246821990291599}
   m_Mesh: {fileID: 0}
+--- !u!114 &196435495708573758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967246821990291599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d782dcad109d664499b0897342fdb5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20

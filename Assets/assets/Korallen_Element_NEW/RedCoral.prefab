@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 5655344918370047958}
   - component: {fileID: 6821232412925005454}
   - component: {fileID: -5436395969420980378}
-  - component: {fileID: 851354874990607447}
   - component: {fileID: -8013481343781311026}
   - component: {fileID: 64917676895083927}
   - component: {fileID: 8900726764380372589}
+  - component: {fileID: 5717756029685669945}
   m_Layer: 0
   m_Name: RedCoral
   m_TagString: Untagged
@@ -95,20 +95,6 @@ MonoBehaviour:
   length: 2
   growthSpeed: 1
   bubbleMaterial: {fileID: 3809902022540869445, guid: 620c0995b699e7c4d8a3e40673cb6504, type: 3}
---- !u!114 &851354874990607447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 754953328346775496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab452c2d114c4447db147dbe3eaf8b0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
-  mainCamera: {fileID: 0}
 --- !u!65 &-8013481343781311026
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -192,3 +178,16 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &5717756029685669945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754953328346775496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d782dcad109d664499b0897342fdb5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20

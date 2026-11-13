@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8152658550048559417}
   - component: {fileID: 1903701867080009843}
   - component: {fileID: 3307410711172189747}
-  - component: {fileID: 9207251290014342117}
   - component: {fileID: 1565991199134919873}
+  - component: {fileID: 5491092218459341721}
   m_Layer: 0
   m_Name: TreeCoralObject
   m_TagString: Untagged
@@ -170,20 +170,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 4}
   m_Center: {x: 0, y: 2.53, z: 0}
---- !u!114 &9207251290014342117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8152658550048559397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab452c2d114c4447db147dbe3eaf8b0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
-  mainCamera: {fileID: 0}
 --- !u!33 &1565991199134919873
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -192,3 +178,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8152658550048559397}
   m_Mesh: {fileID: 0}
+--- !u!114 &5491092218459341721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152658550048559397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d782dcad109d664499b0897342fdb5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4903169333808163029}
   - component: {fileID: 6299441870995626417}
   - component: {fileID: 4481353516378037717}
-  - component: {fileID: -2662049501018067930}
+  - component: {fileID: 7054445259236015774}
   m_Layer: 0
   m_Name: StackhornCoralObject
   m_TagString: Untagged
@@ -50,7 +50,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 0}
-  iterations: 2
   length: 1
   growthSpeed: 0.1
   treePrefab: {fileID: 2049506892133396965, guid: 495042c6b5dd8d6498c7783d3844333b, type: 3}
@@ -179,7 +178,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 4}
   m_Center: {x: 0, y: 2.5, z: 0}
---- !u!114 &-2662049501018067930
+--- !u!114 &7054445259236015774
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,8 +187,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 854679221498002045}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab452c2d114c4447db147dbe3eaf8b0c, type: 3}
+  m_Script: {fileID: 11500000, guid: d782dcad109d664499b0897342fdb5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  mainCamera: {fileID: 0}
