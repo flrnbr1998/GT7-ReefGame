@@ -2,11 +2,11 @@
 
 ## Projekt-Übersicht
 
-Interaktives Riff-Erlebnis für das TiltFive AR-Board. Der Spieler bereinigt einen virtuellen Korallenriff von Müll und beobachtet, wie sich der Wellness-Score des Riffs verändert. Korallen wachsen prozedural per L-System.
+Interaktives Riff-Erlebnis. Der Spieler bereinigt einen virtuellen Korallenriff von Müll und beobachtet, wie sich der Wellness-Score des Riffs verändert. Korallen wachsen prozedural per L-System.
 
 **Unity:** 2021.3.11f1 LTS  
 **Render Pipeline:** Built-in (kein URP)  
-**Plattform:** TiltFive AR-Brille + Wand-Controller
+**Plattform:** PC (Keyboard + Maus)
 
 ---
 
@@ -14,7 +14,7 @@ Interaktives Riff-Erlebnis für das TiltFive AR-Board. Der Spieler bereinigt ein
 
 | Paket | Speicherort | Hinweis |
 |-------|-------------|---------|
-| TiltFive SDK | `Assets/Tilt Five/` + `Assets/Plugins/` | AR-Brille + Wand-Input |
+| TiltFive SDK | `Assets/Tilt Five/` + `Assets/Plugins/` | ~~AR-Brille~~ — nicht mehr Zielplattform, Dateien bleiben aber im Repo |
 | FMOD Studio | `Assets/Plugins/FMOD/` | Audio-Engine |
 | UniGLTF | `Assets/UniGLTF/` | GLTF-Tier-Modelle (Schildkröte, Hai, Krabbe, Rochen) |
 | VRMShaders | `Assets/VRMShaders/` | Abhängigkeit von UniGLTF |
@@ -38,8 +38,8 @@ GameLifetimeScope          — VContainer-Composition-Root (Assets/Scripts/)
 │   └── Config/            — WellnessConfig (ScriptableObject)
 │
 ├── PS_TiltFive.Gameplay   — RiffGameLoop, PlayerController, TrashPickupHandler, PickupInputHandler
-├── PS_TiltFive.Audio      — StubAudioService (PC), AudioManager/FMODEvents (TiltFive-Build)
-├── PS_TiltFive.Input      — PCInputService (PC), TiltFive-Impl noch ausstehend
+├── PS_TiltFive.Audio      — StubAudioService (Entwicklung/Test), AudioManager/FMODEvents (FMOD-Build)
+├── PS_TiltFive.Input      — PCInputService (Keyboard + Maus)
 │
 └── Assembly-CSharp        — TerrainSpawner, TrashSpawnerScript, alte Scripts, GameLifetimeScope
 ```
@@ -83,13 +83,11 @@ Je schlechter der Score, desto schneller spawnt Müll und langsamer Korallen.
 
 ---
 
-## TiltFive-Eingabe
+## PC-Eingabe
 
-`PlayerControll.cs` / `PlayerControll1.cs` verwenden:
-- `TiltFive.Input.GetButton(TiltFive.Input.WandButton.Trigger, TiltFive.PlayerIndex.One)`
-- `TiltFive.Wand.TryGetWandDevice(...)` für Wand-Position/-Rotation
+Zielplattform ist **PC (Keyboard + Maus)**. `PCInputService` ist die produktive IInputService-Implementierung.
 
-Bei Portierung ohne TiltFive: diese durch Mouse/Keyboard-Input ersetzen (siehe GT7_Project `PlayerWandControl.cs` und `DestroyObject.cs` als Referenz).
+Alte TiltFive-Skripte (`PlayerControll.cs`, `DestroyObject.cs`) sind noch im Repo — enthalten `TiltFive.Input`-Aufrufe, dürfen nicht gebaut werden. Werden im nächsten Refactor-Schritt gelöscht.
 
 ---
 
@@ -126,7 +124,7 @@ Musik-Paramter `"MusicToxic"` hat 10 Werte (A–J), gesteuert durch Wellness-Sco
 ## Bekannte Probleme / TODOs
 
 - `Spawner.cs` enthält `using static UnityEditor.PlayerSettings;` — nur im Editor-Kontext funktional, nicht im Build
-- `PlayerControll.cs` und `PlayerControll1.cs` sind redundant (zwei fast-identische Versionen)
+- `PlayerControll.cs` enthält TiltFive-SDK-Aufrufe — nicht mehr Zielplattform, löschen sobald Scene-Audit bestätigt dass kein Prefab mehr darauf zeigt
 - Tierprefabs (Schildkröte, Hai, Krabbe, Rochen) sind UniGLTF-abhängig
 
 ---
