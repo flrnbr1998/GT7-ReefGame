@@ -3,7 +3,9 @@
     "rootNamespace": "",
     "references": [
         "PS_TiltFive.Core",
-        "VContainer"
+        "PS_TiltFive.Audio",
+        "VContainer",
+        "Unity.ugui"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
