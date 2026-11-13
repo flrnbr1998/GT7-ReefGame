@@ -22,9 +22,12 @@ public class TerrainSpawner : MonoBehaviour, ICoralSpawnService
         _positions = new TerrainTextureQuery(terrain, textureIndex).GetSpawnablePositions();
     }
 
-    public GameObject SpawnCoral()
+    public GameObject SpawnCoral() => SpawnAt(GetRandomPosition());
+
+    public GameObject SpawnCoralAt(Vector3 worldPosition) => SpawnAt(worldPosition);
+
+    private GameObject SpawnAt(Vector3 spawnPos)
     {
-        Vector3 spawnPos = GetRandomPosition();
         GameObject obj = Instantiate(corals[UnityEngine.Random.Range(0, corals.Length)], spawnPos, Quaternion.identity);
         obj.transform.SetParent(transform);
 

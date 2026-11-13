@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
+using VContainer.Unity;
 
 public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
 {
@@ -10,6 +10,7 @@ public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
     public float spawnRadius = 5f; // Der Radius innerhalb dessen Objekte spawnen
 
     [Inject] private IAudioService _audio;
+    [Inject] private IObjectResolver _container;
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
@@ -43,8 +44,8 @@ public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
 
         // Erzeuge das ausgewÃ¤hlte Objekt an der berechneten Spawn-Position ohne Drehung
         GameObject spawnedObject = Instantiate(objectsToSpawn[randomIndex], spawnPosition, Quaternion.identity);
+        _container?.InjectGameObject(spawnedObject);
         spawnedObjects.Add(spawnedObject);
-        _audio.PlayOneShot(FMODEvents.PickUpTrashPath, spawnedObject.transform.position);
         return spawnedObject;
     }
 

@@ -1,9 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using VContainer;
 
 public class TrashPickupHandler : MonoBehaviour
 {
     [SerializeField] private float speed = 20f;
+
+    [Inject] private IFeedbackService _feedback;
 
     private bool _flying;
     private Rigidbody _rb;
@@ -19,6 +22,7 @@ public class TrashPickupHandler : MonoBehaviour
     {
         if (_flying) return;
         _flying = true;
+        _feedback?.PlayPickupFeedback(transform.position);
         if (_rb != null) _rb.isKinematic = true;
         StartCoroutine(FlyToCamera());
     }
