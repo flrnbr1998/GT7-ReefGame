@@ -48,18 +48,17 @@ public class PlayerWandControl : MonoBehaviour
                         GameObject hitObject = hit.collider.gameObject;
                         Debug.Log("Controller zeigt auf: " + hitObject.name);
                         timesObjectHitWithRay++;
-                        DestroyObject objectToDestroy = hitObject.GetComponent<DestroyObject>();
+                        TrashPickupHandler objectToDestroy = hitObject.GetComponent<TrashPickupHandler>();
                         if (objectToDestroy != null)
                         {
-                            Debug.Log("Das Objekt hat ein DestroyObject-Skript.");
-                            StartCoroutine(objectToDestroy.DestroyObj());
+                            objectToDestroy.StartPickup();
                         }
                     }
                 }
                 if (Staubsauger.activeSelf)
                 {
                     DestroyAllObjects();
-                    AudioManager.instance.PlayOneShot(FMODEvents.instance.saug, this.transform.position);
+                    AudioManager.instance.PlayOneShot(FMODEvents.SaugPath, this.transform.position);
                     Debug.Log("Staubsauger: Saug");
                 }
             }
@@ -134,18 +133,14 @@ public class PlayerWandControl : MonoBehaviour
         }
     }
 
-    // Neue Methode zum Zerst�ren aller Objekte mit dem DestroyObject-Skript
     public void DestroyAllObjects()
     {
-        DestroyObject[] objectsToDestroy = FindObjectsOfType<DestroyObject>();
-        foreach (DestroyObject obj in objectsToDestroy)
+        TrashPickupHandler[] objectsToDestroy = FindObjectsOfType<TrashPickupHandler>();
+        foreach (TrashPickupHandler obj in objectsToDestroy)
         {
             Renderer renderer = obj.GetComponent<Renderer>();
             if (renderer != null && renderer.isVisible)
-            {
-                StartCoroutine(obj.DestroyObj());
-            }
-
+                obj.StartPickup();
         }
     }
 }

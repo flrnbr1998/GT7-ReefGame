@@ -136,7 +136,7 @@ public class SharkMovement : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(delay);
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.splash, this.transform.position);
+            AudioManager.instance.PlayOneShot(FMODEvents.SplashPath, this.transform.position);
         }
     }
 }
