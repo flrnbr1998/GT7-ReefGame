@@ -65,12 +65,7 @@ public static class ReefSceneSetup
             AutoAssignAnimalPrefabs(svc);
         }
 
-        if (Object.FindObjectOfType<PickupFeedbackService>() == null)
-        {
-            var go  = CreateGO("PickupFeedbackService");
-            go.AddComponent<PickupFeedbackService>();
-            // pickupEffect left null — assign a particle prefab with a valid material manually
-        }
+        SetupPickupFeedbackService();
 
         if (Object.FindObjectOfType<TrashSpawnerScript>() == null)
         {
@@ -80,6 +75,50 @@ public static class ReefSceneSetup
         }
 
         Debug.Log("[ReefSetup] Service objects done.");
+    }
+
+    static void SetupPickupFeedbackService()
+    {
+        var svc = Object.FindObjectOfType<PickupFeedbackService>();
+        if (svc == null)
+        {
+            svc = CreateGO("PickupFeedbackService").AddComponent<PickupFeedbackService>();
+        }
+
+        // Ensure a ParticleSystem exists with a valid material
+        var ps = svc.GetComponent<ParticleSystem>();
+        if (ps == null)
+            ps = Undo.AddComponent<ParticleSystem>(svc.gameObject);
+
+        var psr = svc.GetComponent<ParticleSystemRenderer>();
+        var mat = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
+        if (mat != null)
+        {
+            var pso = new SerializedObject(psr);
+            var matsProp = pso.FindProperty("m_Materials");
+            if (matsProp != null && matsProp.arraySize > 0)
+                matsProp.GetArrayElementAtIndex(0).objectReferenceValue = mat;
+            pso.ApplyModifiedProperties();
+        }
+
+        // Configure burst pickup effect
+        var main     = ps.main;
+        main.loop         = false;
+        main.playOnAwake  = false;
+        main.startLifetime  = new ParticleSystem.MinMaxCurve(0.3f, 0.6f);
+        main.startSpeed     = new ParticleSystem.MinMaxCurve(2f, 5f);
+        main.startSize      = new ParticleSystem.MinMaxCurve(0.1f, 0.25f);
+        main.startColor     = new ParticleSystem.MinMaxGradient(new Color(1f, 0.9f, 0.3f), Color.white);
+        main.gravityModifier = 0.5f;
+        main.maxParticles    = 30;
+
+        var emission = ps.emission;
+        emission.enabled         = true;
+        emission.rateOverTime    = 0;
+        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 15) });
+
+        SetField(svc, "pickupEffect", ps);
+        Debug.Log("[ReefSetup] PickupFeedbackService: ParticleSystem configured with Default-Particle material.");
     }
 
     static void AutoAssignAnimalPrefabs(AnimalSpawnService svc)
