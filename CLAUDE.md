@@ -43,11 +43,15 @@ GameLifetimeScope               — VContainer-Composition-Root (Assets/Scripts/
 │   │                             IAudioService, IInputService, IColorEffectService,
 │   │                             IColorable, ISpawnable, ICombinable
 │   │                             — [GEPLANT] IHUDService, IHighlightable, IFeedbackService,
-│   │                             IAnimalSpawnService, IReefZone, IReefZoneService, IReefStateService
+│   │                             IAnimalSpawnService, IReefZone, IReefZoneService, IReefStateService,
+│   │                             IQuestService, ICoralUnlockService
 │   ├── Services/               — WellnessService (pure C#), CoralColorEffectService (MB)
-│   │                             — [GEPLANT] ReefStateService (pure C#)
+│   │                             — [GEPLANT] ReefStateService (pure C#),
+│   │                             QuestService (pure C#), CoralUnlockService (pure C#)
 │   └── Config/                 — WellnessConfig (ScriptableObject)
-│                                 — [GEPLANT] AnimalType (enum), ReefState (enum)
+│                                 — [GEPLANT] AnimalType (enum), ReefState (enum),
+│                                 CoralType (enum), QuestType (enum),
+│                                 QuestDefinition (ScriptableObject), QuestDialog (ScriptableObject)
 │
 ├── PS_TiltFive.Gameplay        — RiffGameLoop, PlayerController, TrashPickupHandler,
 │                                 PickupInputHandler, TerrainSpawner, TrashSpawnerScript,
@@ -55,7 +59,8 @@ GameLifetimeScope               — VContainer-Composition-Root (Assets/Scripts/
 │                                 CoralPlantHandler, CoralRingInventory
 │                                 — [GEPLANT] HUDController,
 │                                 TrashHighlightHandler, AnimalSpawnService,
-│                                 ReefZone, ReefZoneManager, PickupFeedbackService
+│                                 ReefZone, ReefZoneManager, PickupFeedbackService,
+│                                 QuestNpcHandler
 ├── PS_TiltFive.Audio           — StubAudioService (Entwicklung/Test), AudioManager/FMODEvents (FMOD-Build)
 ├── PS_TiltFive.Input           — PCInputService (Keyboard + Maus)
 │
@@ -97,6 +102,27 @@ spawnTrashIntervalCalculated = spawnTrashInterval - wellnessScore
 ```
 
 Je schlechter der Score, desto schneller spawnt Müll und langsamer Korallen.
+
+### Korallen-Freischaltung (Story-System)
+
+`CoralUnlockService` verwaltet freigeschaltete Typen; `CoralRingInventory` zeigt Schloss für gesperrte Slots.
+
+| Koralle | Freischalt-Bedingung |
+|---------|---------------------|
+| `BubbleCoral` | Startkoralle, immer verfügbar |
+| `RandomCoral` | Erste Krabbe-Quest abgeschlossen |
+| `TreeCoral` | Schildkröte erschienen (Wellness ≥ 1.4) |
+| `StaghornCoral` | Mittlere Schildkröten-Quest abgeschlossen |
+| `RedCoral` | Mantarochen erschienen (Prestige, Wellness ≥ 1.6) |
+
+### Quest-Typen
+
+| QuestType | Beispiel | Messbar via |
+|-----------|----------|-------------|
+| `TrashZoneClear` | „Räume Zone Nord von 5 Plastikflaschen" | `OnTrashCollected` + Zone-Filter |
+| `CoralPlant` | „Pflanze 3 BubbleCoral in Zone West" | `OnCoralPlanted` + Zone-Filter |
+| `TrashTypeCollect` | „Sammle 2 Strohhalme" | `OnTrashCollected` + Prefab-Tag |
+| `WellnessHold` | „Halte Wellness ≥ 1.3 für 60 s" | `IWellnessService.OnScoreChanged` + Timer |
 
 ---
 
@@ -170,12 +196,22 @@ Offene Issues (GitHub): [#2 Object Pool](https://github.com/flrnbr1998/PS__TiltF
 - **[TODO]** `ReefStateService` + `IReefStateService` — ReefState aus Wellness ableiten, `OnReefStateChanged` feuern
 - **[TODO]** `AnimalSpawnService` + `IAnimalSpawnService` — Tiere per ReefState-Event spawnen/despawnen
 - **[TODO]** Replayability-Loop — Endscreen (Score, Zeit, Tiere zurück), Restart ohne Unity-Reload
+- **[TODO]** `QuestDefinition` (ScriptableObject) — `QuestType` enum (TrashZoneClear, CoralPlant, TrashTypeCollect, WellnessHold), Zielwert, optionale Zone-Referenz, Belohnung-Enum
+- **[TODO]** `IQuestService` + `QuestService` — aktive Quest tracken, Fortschritt per `OnTrashCollected`/`OnCoralPlanted`-Events, `OnQuestCompleted` feuern
+- **[TODO]** `ICoralUnlockService` + `CoralUnlockService` — freigeschaltete Korallen-Typen; `IsUnlocked(CoralType)`, `Unlock(CoralType)`; `CoralRingInventory` zeigt Schloss für gesperrte Slots; Reihenfolge: BubbleCoral (immer) → RandomCoral (Krabbe-Quest) → TreeCoral (Wellness ≥ 1.4)
+- **[TODO]** Krabbe als Quest-Geber — `QuestNpcHandler` (MB) mit Trigger-Collider (3 m), E-Taste startet Dialog, 2–3 Quests: TrashZoneClear + CoralPlant; schaltet RandomCoral frei
+- **[TODO]** `QuestDialog` (ScriptableObject) — Textzeilen je Tier, minimales Text-Overlay UI; Annäherung triggert Prompt, E-Taste bestätigt
 
 **Phase 2 — Juice & Meta (Deliverable 2):**
 - **[TODO]** `ReefZone` + `ReefZoneManager` + `IReefZone`/`IReefZoneService` — Riff in räumliche Zonen aufteilen, Zone-Cleanliness-Tracking
 - **[TODO]** Object Pool für Trash-Prefabs ([#2](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/2))
 - **[TODO]** CI/CD-Pipeline ([#4](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/4))
 - **[TODO]** Persistent Data (Highscores, freigeschaltete Korallen-Typen)
+- **[TODO]** Schildkröte + Mantarochen als Quest-Geber (je 3 Quests, Quest-Kette pro Zone; benötigt `ReefZone`)
+- **[TODO]** StaghornCoral + RedCoral (Prestige) freischalten via Quests (benötigt `ICoralUnlockService` aus Phase 1)
+- **[TODO]** Tier-Persönlichkeit — 3–5 Textzeilen pro Tier je Quest-Phase (Krabbe: knapp/praktisch, Schildkröte: weise/ruhig, Mantarochen: poetisch/mystisch)
+- **[TODO]** Collectibles: Meeresschutt-Bestimmungsbuch (benötigt Persistent Data)
+- **[TODO]** Kooperierende Tiere: Mantarochen boosted Wellness passiv (+0.05/min bei Wellness ≥ 1.6)
 
 ---
 
@@ -209,7 +245,7 @@ Ressourcen: [Game Programming Patterns](https://gameprogrammingpatterns.com/cont
 
 Das Projekt folgt einem layered DDD-Ansatz:
 
-- **Ubiquitous Language:** Begriffe aus dem Riff-Domänen-Modell konsequent in Code verwenden: `Wellness`, `Coral`, `Trash`, `Bleach`, `Recolor`, `Zone`, `Cleanliness`, `Restoration`, `Degradation`, `Animal`, `Highlight`, `ReefState` — nicht `health`, `plant`, `garbage`, `region`, `dirty`, `fix`, `creature`
+- **Ubiquitous Language:** Begriffe aus dem Riff-Domänen-Modell konsequent in Code verwenden: `Wellness`, `Coral`, `Trash`, `Bleach`, `Recolor`, `Zone`, `Cleanliness`, `Restoration`, `Degradation`, `Animal`, `Highlight`, `ReefState`, `Quest`, `Dialog`, `Unlock` — nicht `health`, `plant`, `garbage`, `region`, `dirty`, `fix`, `creature`, `task`, `popup`, `enable`
 - **Entities:** Korallen- und Müll-GameObjects (haben Identität + Lebenszyklus); `ReefZone` (hat Identität + Cleanliness-Zustand)
 - **Value Objects:** `WellnessConfig` (unveränderliche Konfiguration)
 - **Services:** `WellnessService`, `CoralColorEffectService`, `ReefStateService` — zustandsbehaftete Domain-Logik ohne UI
