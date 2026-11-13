@@ -85,3 +85,8 @@ fmod_editor.log
 
 # Build output
 /[Aa]ssets/build/
+
+# Large 3rd-party asset folders (local only, not tracked in git)
+Assets/ThirdParty/
+Assets/Art/GrassAndFlowers/
+Assets/Art/CustomModels/
