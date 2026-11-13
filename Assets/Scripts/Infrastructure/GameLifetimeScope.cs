@@ -25,6 +25,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<RiffGameLoop>();
         builder.RegisterComponentInHierarchy<PlayerController>();
         builder.RegisterComponentInHierarchy<PickupInputHandler>();
+        builder.RegisterComponentInHierarchy<SharkMovement>();
         // TrashPickupHandler is runtime-instantiated — injected via container.InjectGameObject() in TrashSpawnerScript
     }
 }

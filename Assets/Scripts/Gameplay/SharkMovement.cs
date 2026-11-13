@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using VContainer;
 
 public class SharkMovement : MonoBehaviour
 {
+    [Inject] private IAudioService _audio;
+
     [SerializeField] private Transform target; // Das Zielobjekt, um das sich das Objekt bewegt
     [SerializeField] private float moveSpeed = 1.0f; // Geschwindigkeit der Vorwärtsbewegung
     [SerializeField] private float rotationSpeed = 15.0f; // Geschwindigkeit der Drehung
@@ -136,7 +139,7 @@ public class SharkMovement : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(delay);
-            AudioManager.instance.PlayOneShot(FMODEvents.SplashPath, this.transform.position);
+            _audio.PlayOneShot(FMODEvents.SplashPath, this.transform.position);
         }
     }
 }
