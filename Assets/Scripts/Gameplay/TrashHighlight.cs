@@ -16,6 +16,7 @@ public class TrashHighlight : MonoBehaviour, IHighlightable
     {
         foreach (Renderer r in _renderers)
         {
+            if (r == null) continue;
             r.GetPropertyBlock(_mpb);
             _mpb.SetColor(ColorId, new Color(1f, 1f, 0.3f));
             r.SetPropertyBlock(_mpb);
@@ -26,6 +27,9 @@ public class TrashHighlight : MonoBehaviour, IHighlightable
     {
         var empty = new MaterialPropertyBlock();
         foreach (Renderer r in _renderers)
+        {
+            if (r == null) continue;
             r.SetPropertyBlock(empty);
+        }
     }
 }

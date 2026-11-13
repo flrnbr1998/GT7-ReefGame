@@ -23,7 +23,10 @@ public class TrashHighlightHandler : MonoBehaviour
             if (!_highlighted.Contains(h)) h.Highlight();
 
         foreach (IHighlightable h in _highlighted)
+        {
+            if (h is MonoBehaviour mb && mb == null) continue;
             if (!current.Contains(h)) h.Unhighlight();
+        }
 
         _highlighted.Clear();
         foreach (IHighlightable h in current) _highlighted.Add(h);
@@ -32,7 +35,10 @@ public class TrashHighlightHandler : MonoBehaviour
     private void OnDisable()
     {
         foreach (IHighlightable h in _highlighted)
+        {
+            if (h is MonoBehaviour mb && mb == null) continue;
             h.Unhighlight();
+        }
         _highlighted.Clear();
     }
 }
