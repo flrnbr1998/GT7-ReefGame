@@ -26,6 +26,18 @@ public static class ReefSceneSetup
         if (pc == null) { Debug.LogError("[ReefSetup] PlayerController not found — open Riff.unity first."); return; }
 
         GameObject p = pc.gameObject;
+
+        var rgl = Object.FindObjectOfType<RiffGameLoop>();
+        if (rgl != null)
+        {
+            var so = new SerializedObject(rgl);
+            if (so.FindProperty("config").objectReferenceValue == null)
+            {
+                var cfg = AssetDatabase.LoadAssetAtPath<WellnessConfig>("Assets/Settings/WellnessConfig.asset");
+                if (cfg != null) SetField(rgl, "config", cfg);
+            }
+        }
+
         AddIfMissing<TrashHighlightHandler>(p);
 
         if (p.GetComponent<CoralPlantHandler>() == null)

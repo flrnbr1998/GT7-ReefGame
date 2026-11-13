@@ -22,6 +22,11 @@ public class RiffGameLoop : MonoBehaviour
 
     private void Start()
     {
+        if (config == null)
+        {
+            Debug.LogError("[RiffGameLoop] WellnessConfig not assigned — drag Assets/Settings/WellnessConfig.asset into the Config field.", this);
+            return;
+        }
         _wellness.OnScoreChanged += OnScoreChanged;
         RenderSettings.fog = true;
         StartCoroutine(FactLoop());
@@ -31,6 +36,7 @@ public class RiffGameLoop : MonoBehaviour
 
     private void Update()
     {
+        if (config == null) return;
         _coralTimer += Time.deltaTime;
         _trashTimer += Time.deltaTime;
 
