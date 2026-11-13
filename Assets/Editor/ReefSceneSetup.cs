@@ -72,6 +72,13 @@ public static class ReefSceneSetup
             // pickupEffect left null — assign a particle prefab with a valid material manually
         }
 
+        if (Object.FindObjectOfType<TrashSpawnerScript>() == null)
+        {
+            var go  = CreateGO("TrashSpawnerScript");
+            var svc = go.AddComponent<TrashSpawnerScript>();
+            AutoAssignTrashPrefabs(svc);
+        }
+
         Debug.Log("[ReefSetup] Service objects done.");
     }
 
@@ -89,6 +96,26 @@ public static class ReefSceneSetup
             else if (lower.Contains("turtle"))                 SetField(svc, "turtlePrefab",   prefab);
             else if (lower.Contains("manta") || lower.Contains("ray")) SetField(svc, "mantaRayPrefab", prefab);
         }
+    }
+
+    static void AutoAssignTrashPrefabs(TrashSpawnerScript svc)
+    {
+        string[] guids  = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Prefabs/Trash" });
+        var      prefabs = new System.Collections.Generic.List<GameObject>();
+        foreach (string guid in guids)
+        {
+            var p = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
+            if (p != null) prefabs.Add(p);
+        }
+        if (prefabs.Count == 0) { Debug.LogWarning("[ReefSetup] No prefabs found in Assets/Prefabs/Trash/"); return; }
+
+        var so   = new SerializedObject(svc);
+        var prop = so.FindProperty("objectsToSpawn");
+        prop.arraySize = prefabs.Count;
+        for (int i = 0; i < prefabs.Count; i++)
+            prop.GetArrayElementAtIndex(i).objectReferenceValue = prefabs[i];
+        so.ApplyModifiedProperties();
+        Debug.Log($"[ReefSetup] TrashSpawnerScript: assigned {prefabs.Count} trash prefab(s).");
     }
 
     // ── HUD Canvas ───────────────────────────────────────────────────────────
@@ -189,7 +216,9 @@ public static class ReefSceneSetup
 
     static void SetupTrashPrefabs()
     {
-        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
+        // Search directly in Trash folder — avoids relying on TrashPickupHandler GUID
+        // (DestroyObject → TrashPickupHandler rename may leave Missing Script in prefab)
+        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Prefabs/Trash" });
         int count = 0;
 
         foreach (string guid in guids)
@@ -197,10 +226,6 @@ public static class ReefSceneSetup
             string path   = AssetDatabase.GUIDToAssetPath(guid);
             var    prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             if (prefab == null) continue;
-
-            bool hasHandler = prefab.GetComponent<TrashPickupHandler>() != null
-                           || prefab.GetComponentInChildren<TrashPickupHandler>() != null;
-            if (!hasHandler) continue;
             if (prefab.GetComponent<TrashHighlight>() != null) continue;
 
             using var scope = new PrefabUtility.EditPrefabContentsScope(path);
