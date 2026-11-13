@@ -90,3 +90,6 @@ fmod_editor.log
 Assets/ThirdParty/
 Assets/Art/GrassAndFlowers/
 Assets/Art/CustomModels/
+
+# FMOD compiled audio banks (rebuilt from FMOD Studio)
+Assets/build/
