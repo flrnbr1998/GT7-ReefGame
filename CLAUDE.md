@@ -87,7 +87,7 @@ Je schlechter der Score, desto schneller spawnt Müll und langsamer Korallen.
 
 Zielplattform ist **PC (Keyboard + Maus)**. `PCInputService` ist die produktive IInputService-Implementierung.
 
-Alte TiltFive-Skripte (`PlayerControll.cs`, `DestroyObject.cs`) sind noch im Repo — enthalten `TiltFive.Input`-Aufrufe, dürfen nicht gebaut werden. Werden im nächsten Refactor-Schritt gelöscht.
+Alte TiltFive-Skripte (`PlayerControll.cs`, `DestroyObject.cs`, `RiffController.cs`, `Spawner.cs`) wurden bereits gelöscht. `PCInputService` ist produktiv.
 
 ---
 
@@ -123,8 +123,10 @@ Musik-Paramter `"MusicToxic"` hat 10 Werte (A–J), gesteuert durch Wellness-Sco
 
 ## Bekannte Probleme / TODOs
 
-- `Spawner.cs` enthält `using static UnityEditor.PlayerSettings;` — nur im Editor-Kontext funktional, nicht im Build
-- `PlayerControll.cs` enthält TiltFive-SDK-Aufrufe — nicht mehr Zielplattform, löschen sobald Scene-Audit bestätigt dass kein Prefab mehr darauf zeigt
+Offene Issues (GitHub): [#1 CoralColorManager](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/1) · [#2 Object Pool](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/2) · [#3 FMOD-Pfade](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/3) · [#4 CI/CD](https://github.com/flrnbr1998/PS__TiltFive_Riff/issues/4)
+
+- **[#1 MANUELL]** `CoralColorManager` noch in `Riff.unity` (Zeile ~11899) — in Unity Editor durch `CoralColorEffectService` ersetzen, dann `CoralColorManager.cs` löschen
+- **[#3 TODO]** FMOD-Eventpfade in `FMODEvents.cs` gegen FMOD Studio verifizieren (alle `const string` Pfade mit `// TODO: verify` markiert)
 - Tierprefabs (Schildkröte, Hai, Krabbe, Rochen) sind UniGLTF-abhängig
 
 ---
@@ -175,11 +177,11 @@ Nächste Woche in der Vorlesung: **Event Storming + Physical Prototyping + Specc
 
 | Prinzip | Status | Wichtigste Regeln |
 |---------|--------|-------------------|
-| **S** Single Responsibility | ⚠️ teilweise | `TerrainSpawner` (3 Verantwortlichkeiten), `RiffGameLoop` (Fog + Music + Score-Reset) |
+| **S** Single Responsibility | ✅ | `TerrainSpawner` aufgeteilt (→ `TerrainTextureQuery`); `RiffGameLoop` (Fog + Music + Score-Reset — akzeptabel) |
 | **O** Open/Closed | ✅ | CoralGrowthBase-Hierarchie offen für Erweiterung per Subklasse |
 | **L** Liskov | ✅ | Alle Subklassen von CoralGrowthBase substituierbar; StubAudioService vollständig |
 | **I** Interface Segregation | ✅ | Kleine Interfaces (IWellnessService 2 Methoden, IInputService 2 Methoden) |
-| **D** Dependency Inversion | ⚠️ bekannte Verstöße | Siehe TODO-Kommentare unten |
+| **D** Dependency Inversion | ✅ | Alle Violations behoben; AudioManager als IAudioService via VContainer |
 
 ### Bekannte D-Verstöße (mit TODO markiert)
 
