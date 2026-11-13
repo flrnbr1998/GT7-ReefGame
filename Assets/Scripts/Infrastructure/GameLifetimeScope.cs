@@ -30,6 +30,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<PlayerController>();
         builder.RegisterComponentInHierarchy<PickupInputHandler>();
         builder.RegisterComponentInHierarchy<CoralPlantHandler>();
+        builder.RegisterComponentInHierarchy<CoralRingInventory>();
         builder.RegisterComponentInHierarchy<TrashHighlightHandler>();
         builder.RegisterComponentInHierarchy<GameSessionController>();
         builder.RegisterComponentInHierarchy<SharkMovement>();

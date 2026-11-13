@@ -22,24 +22,38 @@ public class TerrainSpawner : MonoBehaviour, ICoralSpawnService
         _positions = new TerrainTextureQuery(terrain, textureIndex).GetSpawnablePositions();
     }
 
-    public GameObject SpawnCoral() => SpawnAt(GetRandomPosition());
+    private int _selectedIndex;
 
-    public GameObject SpawnCoralAt(Vector3 worldPosition) => SpawnAt(worldPosition);
-
-    private GameObject SpawnAt(Vector3 spawnPos)
+    public void SelectCoral(int index) => _selectedIndex = Mathf.Clamp(index, 0, corals.Length - 1);
+    public int CoralCount => corals != null ? corals.Length : 0;
+    public string GetCoralName(int index)
     {
-        GameObject obj = Instantiate(corals[UnityEngine.Random.Range(0, corals.Length)], spawnPos, Quaternion.identity);
+        if (corals == null || index < 0 || index >= corals.Length) return string.Empty;
+        return corals[index].name.Replace("Prefab", "").Replace("Object", "").Trim();
+    }
+
+    public GameObject GetCoralPrefab(int index)
+    {
+        if (corals == null || index < 0 || index >= corals.Length) return null;
+        return corals[index];
+    }
+
+    public GameObject SpawnCoral() => SpawnAt(GetRandomPosition(), UnityEngine.Random.Range(0, corals.Length));
+
+    public GameObject SpawnCoralAt(Vector3 worldPosition) => SpawnAt(worldPosition, _selectedIndex);
+
+    private GameObject SpawnAt(Vector3 spawnPos, int coralIndex)
+    {
+        GameObject obj = Instantiate(corals[coralIndex], spawnPos, Quaternion.identity);
         obj.transform.SetParent(transform);
 
         ISpawnable spawnable = obj.GetComponent<ISpawnable>();
-        if (spawnable == null)
+        if (spawnable != null)
         {
-            Debug.LogWarning("[TerrainSpawner] Spawned coral has no ISpawnable.");
-            return null;
+            spawnable.SetStartPosition(spawnPos);
+            spawnable.SetParent(obj);
         }
 
-        spawnable.SetStartPosition(spawnPos);
-        spawnable.SetParent(obj);
         _createdCorals.Add(obj);
         obj.GetComponent<CoralGrowthBase>()?.SetColorEffectService(_colorEffect);
 
