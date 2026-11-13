@@ -7,7 +7,7 @@ using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : MonoBehaviour, IAudioService
 {
     [Header("Volume")]
     [Range(0, 1)]
@@ -103,16 +103,15 @@ public class AudioManager : MonoBehaviour
         musicEventInstance.start();
     }
     // __________
-    public void PlayFact(EventReference factsReference)
+    public void PlayFact(int factIndex)
     {
-        var instance = CreateInstance(factsReference);
-        instance.setParameterByName("ChoralFact", factNum);
-        AudioManager.instance.SetMusicParameter("Parameter 1", "Duck");
-        instance.start();
-
-        StartCoroutine(WaitForFactToEnd(instance));
-
-        instance.release();
+        setFactNum(factIndex);
+        var eventInstance = CreateInstance(FMODEvents.instance.choralFact);
+        eventInstance.setParameterByName("ChoralFact", factNum);
+        SetMusicParameter("Parameter 1", "Duck");
+        eventInstance.start();
+        StartCoroutine(WaitForFactToEnd(eventInstance));
+        eventInstance.release();
     }
     private IEnumerator WaitForFactToEnd(EventInstance instance)
     {

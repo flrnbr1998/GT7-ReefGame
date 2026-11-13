@@ -13,10 +13,10 @@ public class GameLifetimeScope : LifetimeScope
 
         // Pure C# services
         builder.Register<WellnessService>(Lifetime.Singleton).AsImplementedInterfaces();
-        builder.Register<StubAudioService>(Lifetime.Singleton).AsImplementedInterfaces();
         builder.Register<PCInputService>(Lifetime.Singleton).AsImplementedInterfaces();
 
         // MonoBehaviour services (must exist in scene)
+        builder.RegisterComponentInHierarchy<AudioManager>().AsImplementedInterfaces();
         builder.RegisterComponentInHierarchy<CoralColorEffectService>().AsImplementedInterfaces();
         builder.RegisterComponentInHierarchy<TerrainSpawner>().AsImplementedInterfaces();
         builder.RegisterComponentInHierarchy<TrashSpawnerScript>().AsImplementedInterfaces();
