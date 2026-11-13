@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 878945408703562213}
   - component: {fileID: 7204939324415987753}
   - component: {fileID: 6742899766469238567}
+  - component: {fileID: 8606716056059122954}
   m_Layer: 0
   m_Name: BubbleCoralPrefab
   m_TagString: Untagged
@@ -191,3 +192,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+--- !u!114 &8606716056059122954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2828468890713296411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f0e01fd59e9e1348ae756e66ca38d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

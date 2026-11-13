@@ -18,15 +18,8 @@ public class CoralPlantHandler : MonoBehaviour
     private float _cooldownUntil;
     private int _selectedIndex;
 
-    private GUIStyle _slotStyle;
-    private GUIStyle _slotSelectedStyle;
-
     private static readonly Color _colorValid   = new Color(0f, 1f, 0f, 0.4f);
     private static readonly Color _colorInvalid = new Color(1f, 0f, 0f, 0.4f);
-
-    private const float SlotW = 130f;
-    private const float SlotH = 48f;
-    private const float SlotGap = 6f;
 
     private void Start()
     {
@@ -65,41 +58,6 @@ public class CoralPlantHandler : MonoBehaviour
         _cursorMat.renderQueue = 3000;
         _cursorRenderer.material = _cursorMat;
         _cursor.SetActive(false);
-    }
-
-    private void BuildGUIStyles()
-    {
-        Texture2D bgNormal   = MakeTex(new Color(0.1f, 0.1f, 0.1f, 0.75f));
-        Texture2D bgSelected = MakeTex(new Color(0.15f, 0.65f, 0.25f, 0.90f));
-
-        // Each style gets its own GUIStyleState — copying via new GUIStyle(other)
-        // shares the internal state reference, breaking per-style background overrides.
-        _slotStyle = new GUIStyle(GUI.skin.box)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontSize  = 13,
-            wordWrap  = true
-        };
-        _slotStyle.normal.background = bgNormal;
-        _slotStyle.normal.textColor  = Color.white;
-
-        _slotSelectedStyle = new GUIStyle(GUI.skin.box)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontSize  = 13,
-            wordWrap  = true,
-            fontStyle = FontStyle.Bold
-        };
-        _slotSelectedStyle.normal.background = bgSelected;
-        _slotSelectedStyle.normal.textColor  = Color.white;
-    }
-
-    private static Texture2D MakeTex(Color c)
-    {
-        Texture2D t = new Texture2D(1, 1);
-        t.SetPixel(0, 0, c);
-        t.Apply();
-        return t;
     }
 
     private void Update()
@@ -150,6 +108,7 @@ public class CoralPlantHandler : MonoBehaviour
 
     private void HandleInventoryInput()
     {
+        if (!CoralRingInventory.IsVisible) return;
         int count = _corals.CoralCount;
         if (count == 0) return;
 
@@ -180,31 +139,6 @@ public class CoralPlantHandler : MonoBehaviour
         _selectedIndex = index;
         _corals.SelectCoral(index);
         OnSelectionChanged?.Invoke(index);
-    }
-
-    private void OnGUI()
-    {
-        if (_slotStyle == null) BuildGUIStyles();
-
-        int count = _corals?.CoralCount ?? 0;
-
-        // Fallback label — always visible, no style dependency
-        string selName = count > 0 ? _corals.GetCoralName(_selectedIndex) : "—";
-        GUI.Label(new Rect(10, 10, 300, 24), $"Coral: {selName}  (scroll / 1-{count})");
-
-        if (count == 0 || CoralRingInventory.IsVisible) return;
-
-        float totalW = count * SlotW + (count - 1) * SlotGap;
-        float startX = (Screen.width - totalW) * 0.5f;
-        float startY = Screen.height - SlotH - 16f;
-
-        for (int i = 0; i < count; i++)
-        {
-            Rect r = new Rect(startX + i * (SlotW + SlotGap), startY, SlotW, SlotH);
-            GUIStyle style = i == _selectedIndex ? _slotSelectedStyle : _slotStyle;
-            string label = $"[{i + 1}] {_corals.GetCoralName(i)}";
-            GUI.Box(r, label, style);
-        }
     }
 
     private bool IsSandAt(Vector3 worldPos)

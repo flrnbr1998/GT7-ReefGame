@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3307410711172189747}
   - component: {fileID: 1565991199134919873}
   - component: {fileID: 5491092218459341721}
+  - component: {fileID: 499582678672015098}
   m_Layer: 0
   m_Name: TreeCoralObject
   m_TagString: Untagged
@@ -52,7 +53,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   length: 1
   growthSpeed: 1
-  branchObject: {fileID: 4134626749475414319, guid: 7691d537b7936254c9366ae28374fe90, type: 3}
+  branchObject: {fileID: 814098547485250108, guid: 789a538f0ba0a334d9636eabf4c8a80a, type: 3}
 --- !u!23 &8152658550048559417
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -191,3 +192,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+--- !u!114 &499582678672015098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152658550048559397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f0e01fd59e9e1348ae756e66ca38d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

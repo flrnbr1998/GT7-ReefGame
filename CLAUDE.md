@@ -1,5 +1,13 @@
 # PS_TiltFive_Riff — CLAUDE.md
 
+## Workflow-Regeln
+
+Nach jeder Feature-Implementierung **immer**:
+1. `CLAUDE.md` aktualisieren — `[TODO]` → `[DONE]`, neue Klassen in Architektur-Übersicht eintragen
+2. Relevante Memory-Dateien updaten: `memory/architecture_refactor_state.md` (neue Klassen), `memory/vcontainer_bindings.md` (neue DI-Bindings)
+
+---
+
 ## Projekt-Übersicht
 
 Interaktives Cleaning-Game. Der Spieler bereinigt einen virtuellen Korallenriff von Müll, pflanzt Korallen und beobachtet, wie das Ökosystem zurückkommt. Wellness-Score steuert Bleaching/Recoloring, Spawn-Timing und das Zurückkehren von Tieren. Korallen wachsen prozedural per L-System.
@@ -43,8 +51,9 @@ GameLifetimeScope               — VContainer-Composition-Root (Assets/Scripts/
 │
 ├── PS_TiltFive.Gameplay        — RiffGameLoop, PlayerController, TrashPickupHandler,
 │                                 PickupInputHandler, TerrainSpawner, TrashSpawnerScript,
-│                                 CoralGrowthBase + alle Subklassen, Tierbewegungen
-│                                 — [GEPLANT] CoralPlantHandler, HUDController,
+│                                 CoralGrowthBase + alle Subklassen, Tierbewegungen,
+│                                 CoralPlantHandler, CoralRingInventory
+│                                 — [GEPLANT] HUDController,
 │                                 TrashHighlightHandler, AnimalSpawnService,
 │                                 ReefZone, ReefZoneManager, PickupFeedbackService
 ├── PS_TiltFive.Audio           — StubAudioService (Entwicklung/Test), AudioManager/FMODEvents (FMOD-Build)
@@ -153,7 +162,8 @@ Offene Issues (GitHub): [#2 Object Pool](https://github.com/flrnbr1998/PS__TiltF
 ### Geplante Features (Implementierungsreihenfolge)
 
 **Phase 1 — Core Gameplay Loop (Deliverable 1):**
-- **[TODO]** `CoralPlantHandler` — Koralle pflanzen per Raycast auf Sand-Terrain, Prefab-Auswahl per `ICoralSpawnService`
+- **[DONE]** `CoralPlantHandler` — Koralle pflanzen per Raycast auf Terrain (RaycastAll durch Wasser), Prefab-Auswahl per Scroll/Zahlentasten, nur aktiv wenn Ring-Inventar offen; transparenter Cursor-Sphere
+- **[DONE]** `CoralRingInventory` — Welt-Raum-Ring von Korallen-Previews um den Spieler (Mausrad-Mitte toggle); ausgewählter Slot immer kameranächste; Option A (SerializedField preview prefabs) + Option B (Koralle wächst bei y=-500, Sphere-Fallback bis Mesh kombiniert); `ICoralSpawnService.GetCoralPrefab()` + `OnSelectionChanged`-Event aus CoralPlantHandler
 - **[TODO]** `HUDController` + `IHUDService` — Wellness-Anzeige, Zonen-Progress, Tier-Rückkehr-Meldungen
 - **[TODO]** `TrashHighlightHandler` + `IHighlightable` — Outline/Glow auf Müll in Reichweite des Spielers
 - **[TODO]** `PickupFeedbackService` + `IFeedbackService` — Partikel + Sound bei Pickup (Juiciness)

@@ -32,7 +32,7 @@ Material:
     - _FadeDistance: 2.5
     - _MaxBlur: 0.3
     - _NoiseFrequency: 2.7
-    - _NoiseOffset: 26.27919
+    - _NoiseOffset: 162.83641
     - _NoiseScale: 2
     - _NoiseSpeed: 3.7
     - _PixelOffset: 0.0039

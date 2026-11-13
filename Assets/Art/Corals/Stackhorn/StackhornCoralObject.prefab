@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6299441870995626417}
   - component: {fileID: 4481353516378037717}
   - component: {fileID: 7054445259236015774}
+  - component: {fileID: 2696172682674198940}
   m_Layer: 0
   m_Name: StackhornCoralObject
   m_TagString: Untagged
@@ -191,3 +192,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+--- !u!114 &2696172682674198940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854679221498002045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f0e01fd59e9e1348ae756e66ca38d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
