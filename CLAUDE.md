@@ -25,16 +25,26 @@ Interaktives Riff-Erlebnis für das TiltFive AR-Board. Der Spieler bereinigt ein
 
 ## Architektur
 
-```
-RiffController          — Spielschleife, Wellness-Score, Spawn-Timing
-├── TerrainSpawner      — Korallen auf dem Terrain spawnen (via TerrainLayer-Textur-Erkennung)
-├── TrashSpawnerScript  — Müll spawnen
-├── CoralColorManager   — Bleaching / Recoloring der Korallen
-└── AudioManager        — FMOD-Wrapper (Singleton)
+Aktuelle Architektur: **VContainer Dependency Injection** (Clean Architecture, Branch `refactor/vcontainer-clean-arch`)
 
-PlayerControll          — TiltFive Wand-Bewegung auf dem Terrain
-DestroyObject           — Müll-Objekt: fliegt bei Wand-Trigger zur Kamera und verschwindet
 ```
+GameLifetimeScope          — VContainer-Composition-Root (Assets/Scripts/)
+│
+├── PS_TiltFive.Core       — Interfaces, Services, Config (kein VContainer-Import nötig)
+│   ├── Interfaces/        — IWellnessService, ICoralSpawnService, ITrashSpawnService,
+│   │                        IAudioService, IInputService, IColorEffectService,
+│   │                        IColorable, ISpawnable, ICombinable
+│   ├── Services/          — WellnessService (pure C#), CoralColorEffectService (MB)
+│   └── Config/            — WellnessConfig (ScriptableObject)
+│
+├── PS_TiltFive.Gameplay   — RiffGameLoop, PlayerController, TrashPickupHandler, PickupInputHandler
+├── PS_TiltFive.Audio      — StubAudioService (PC), AudioManager/FMODEvents (TiltFive-Build)
+├── PS_TiltFive.Input      — PCInputService (PC), TiltFive-Impl noch ausstehend
+│
+└── Assembly-CSharp        — TerrainSpawner, TrashSpawnerScript, alte Scripts, GameLifetimeScope
+```
+
+**Alte Klassen (noch im Repo, ersetzt):** `RiffController` → `RiffGameLoop`, `PlayerControll` → `PlayerController`, `DestroyObject` → `TrashPickupHandler`, `CoralColorManager` → `CoralColorEffectService`
 
 ### Wellness-Formel
 
@@ -121,7 +131,47 @@ Musik-Paramter `"MusicToxic"` hat 10 Werte (A–J), gesteuert durch Wellness-Sco
 
 ---
 
+## Kurs-Anforderungen (GT7 Week 5)
+
+### Abgabe-Termine
+| Abgabe | Datum | Woche | Gewicht |
+|--------|-------|-------|---------|
+| Deliverable 1 | **08.01.2027** | Week 12 | 40 % |
+| Deliverable 2 | **05.02.2027** | Week 16 | 60 % |
+
+**Deliverable 1:** Core gameplay, Replayability, Architecture (VContainer/DI), Clean Code/SOLID, Git + GitHub Project Board  
+**Deliverable 2:** UI/Animations/Juice, Meta-Game/Persistent Data, CI/CD, optional: Remote Config, Analytics/A-B-Tests
+
+### Design Patterns (GoF → Unity-Mapping)
+
+| Pattern | Kategorie | Unity-Umsetzung in diesem Projekt |
+|---------|-----------|-----------------------------------|
+| Singleton | Creational | `AudioManager` (FMOD-Wrapper); **vermeiden** für neue Services → DI bevorzugen |
+| Prototype / Factory | Creational | Prefabs + `Instantiate()` in `TerrainSpawner` / `TrashSpawnerScript` |
+| Object Pool | Creational | Noch nicht implementiert — sinnvoll für Trash-Prefabs bei hohem Spawn-Rate |
+| Component | Structural | MonoBehaviours als Komponenten-Komposition |
+| Observer | Behavioral | `IWellnessService.OnScoreChanged` (C# Event), VContainer-Injection statt UnityEvents |
+| Command | Behavioral | Pickup-Aktion in `PickupInputHandler` / `TrashPickupHandler` |
+
+Ressourcen: [Game Programming Patterns](https://gameprogrammingpatterns.com/contents.html) · [Unity SOLID eBook](https://unity.com/resources/design-patterns-solid-ebook)
+
+### Domain Driven Design (DDD)
+
+Das Projekt folgt einem layered DDD-Ansatz:
+
+- **Ubiquitous Language:** Begriffe aus dem Riff-Domänen-Modell konsequent in Code verwenden: `Wellness`, `Coral`, `Trash`, `Bleach`, `Recolor` — nicht `health`, `plant`, `garbage`
+- **Entities:** Korallen- und Müll-GameObjects (haben Identität + Lebenszyklus)
+- **Value Objects:** `WellnessConfig` (unveränderliche Konfiguration)
+- **Services:** `WellnessService`, `CoralColorEffectService` — zustandsbehaftete Domain-Logik ohne UI
+- **Events:** `OnScoreChanged` → löst Bleaching/Recoloring/Audio-Änderungen aus (Domain Event)
+- **Repository-Muster:** `TerrainSpawner` als Coral-Repository (kennt alle lebenden Korallen, gibt Score zurück)
+- **Layered Architecture:** Core (Domain) → Gameplay/Audio/Input (Application) → Assembly-CSharp (Infrastructure/Composition Root)
+
+Nächste Woche in der Vorlesung: **Event Storming + Physical Prototyping + Speccing**
+
+---
+
 ## Git
 
-Branch: `main` (ist hinter `origin/main` — vor Arbeit `git pull` ausführen)  
-Uncommitted: `Assets/Scenes/Riff.unity`, `Assets/Shaders/Hidden_UnderwaterEffect.mat`
+Aktiver Branch: `refactor/vcontainer-clean-arch`  
+Main-Branch: `main` — vor Merge `git pull origin main` ausführen
