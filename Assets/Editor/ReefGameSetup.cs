@@ -79,99 +79,26 @@ public static class ReefGameSetup
 
     private static void MigrateRiffController()
     {
-        var old = Object.FindObjectOfType<RiffController>();
-        if (old == null)
-        {
-            if (Object.FindObjectOfType<RiffGameLoop>() != null)
-                Debug.Log("[ReefGame] RiffGameLoop already in scene.");
-            else
-                Debug.LogWarning("[ReefGame] No RiffController found — add RiffGameLoop manually.");
-            return;
-        }
-
-        var go = old.gameObject;
-        Undo.AddComponent<RiffGameLoop>(go);
-        AssignWellnessConfig(go.GetComponent<RiffGameLoop>(), "config");
-
-        Undo.DestroyObjectImmediate(old);
-        Debug.Log("[ReefGame] RiffController → RiffGameLoop on '" + go.name + "'.");
+        if (Object.FindObjectOfType<RiffGameLoop>() != null)
+            Debug.Log("[ReefGame] RiffGameLoop already in scene.");
+        else
+            Debug.LogWarning("[ReefGame] RiffGameLoop not found — add it manually.");
     }
 
     private static void MigratePlayerController()
     {
-        // Handle both PlayerControll and PlayerControll1
-        MigratePlayerVariant<PlayerControll>();
-        MigratePlayerVariant<PlayerControll1>();
-    }
-
-    private static void MigratePlayerVariant<T>() where T : MonoBehaviour
-    {
-        var old = Object.FindObjectOfType<T>();
-        if (old == null) return;
-
-        var go = old.gameObject;
-        if (go.GetComponent<PlayerController>() != null)
-        {
-            Undo.DestroyObjectImmediate(old);
-            Debug.Log("[ReefGame] Removed duplicate " + typeof(T).Name + " from '" + go.name + "'.");
-            return;
-        }
-
-        var newComp = Undo.AddComponent<PlayerController>(go);
-
-        // Copy speed field
-        var oldSo  = new SerializedObject(old);
-        var newSo  = new SerializedObject(newComp);
-        newSo.FindProperty("speed").floatValue = oldSo.FindProperty("speed").floatValue;
-
-        // Copy terrain reference if present
-        var terrainProp = oldSo.FindProperty("terrain");
-        if (terrainProp != null)
-            newSo.FindProperty("terrain").objectReferenceValue = terrainProp.objectReferenceValue;
-
-        newSo.ApplyModifiedProperties();
-        Undo.DestroyObjectImmediate(old);
-        Debug.Log("[ReefGame] " + typeof(T).Name + " → PlayerController on '" + go.name + "'.");
+        if (Object.FindObjectOfType<PlayerController>() != null)
+            Debug.Log("[ReefGame] PlayerController already in scene.");
+        else
+            Debug.LogWarning("[ReefGame] PlayerController not found — add it manually.");
     }
 
     // ── Prefab migration ─────────────────────────────────────────────────────
 
     private static void MigrateTrashPrefabs()
     {
-        string[] guids = AssetDatabase.FindAssets("t:Prefab");
-        int count = 0;
-
-        foreach (string guid in guids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (prefab == null) continue;
-
-            var old = prefab.GetComponent<DestroyObject>();
-            if (old == null) continue;
-
-            using (var scope = new PrefabUtility.EditPrefabContentsScope(path))
-            {
-                var root = scope.prefabContentsRoot;
-                var oldComp = root.GetComponent<DestroyObject>();
-                if (oldComp == null) continue;
-
-                float speed = oldComp.speed;
-
-                var newComp = root.AddComponent<TrashPickupHandler>();
-                var so = new SerializedObject(newComp);
-                so.FindProperty("speed").floatValue = speed;
-                so.ApplyModifiedProperties();
-
-                Object.DestroyImmediate(oldComp);
-                count++;
-            }
-        }
-
-        if (count > 0)
-            Debug.Log($"[ReefGame] Migrated DestroyObject → TrashPickupHandler on {count} prefab(s).");
-        else
-            Debug.Log("[ReefGame] No prefabs with DestroyObject found.");
+        // DestroyObject was already migrated to TrashPickupHandler in a previous commit.
+        Debug.Log("[ReefGame] Trash prefab migration already complete.");
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
