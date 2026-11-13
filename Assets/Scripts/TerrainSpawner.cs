@@ -1,20 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 using UnityEngine;
+using VContainer;
 
 public class TerrainSpawner : MonoBehaviour, ICoralSpawnService
 {
-    public Terrain terrain; // Ziehe das Terrain-Objekt hier hinein
-    public int textureIndex; // Der Index der Textur, die du überprüfen möchtest
+    public Terrain terrain;
+    public int textureIndex;
 
     public GameObject[] corals;
     public GameObject player;
-    public float maxDistance = 10; 
+    public float maxDistance = 10;
+
+    [Inject] private IColorEffectService _colorEffect;
 
     private List<Vector3> positions;
-    private List<GameObject> createdCorals = new List<GameObject>(); 
+    private List<GameObject> createdCorals = new List<GameObject>();
     void Start()
     {
         positions = GetAllTextureCoordinates();
@@ -91,6 +93,7 @@ public class TerrainSpawner : MonoBehaviour, ICoralSpawnService
                 spawnable.SetStartPosition(randomPosition);
                 spawnable.SetParent(spawnedObject);
                 createdCorals.Add(spawnedObject);
+                spawnedObject.GetComponent<CoralGrowthBase>()?.SetColorEffectService(_colorEffect);
 
                 // Ensure the object is visible
                 MeshRenderer meshRenderer = spawnedObject.GetComponent<MeshRenderer>();

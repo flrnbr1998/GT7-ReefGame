@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
 {
     public GameObject[] objectsToSpawn; // Eine Liste der Objekte, die du fallen lassen mÃ¶chtest
     public float spawnInterval = 20f; // Das Intervall, in dem Objekte spawnen
     public float spawnRadius = 5f; // Der Radius innerhalb dessen Objekte spawnen
+
+    [Inject] private IAudioService _audio;
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
@@ -41,8 +44,7 @@ public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
         // Erzeuge das ausgewÃ¤hlte Objekt an der berechneten Spawn-Position ohne Drehung
         GameObject spawnedObject = Instantiate(objectsToSpawn[randomIndex], spawnPosition, Quaternion.identity);
         spawnedObjects.Add(spawnedObject);
-        // TODO: inject via VContainer (IAudioService) — D violation: direct Singleton access
-        AudioManager.instance.PlayOneShot(FMODEvents.instance.pickUpTrash, spawnedObject.transform.position);
+        _audio.PlayOneShot(FMODEvents.PickUpTrashPath, spawnedObject.transform.position);
         return spawnedObject;
     }
 

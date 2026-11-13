@@ -34,6 +34,8 @@ public abstract class CoralGrowthBase : MonoBehaviour, ISpawnable, IColorable
     private bool isGrowing;
     private bool hasAllComponents;
 
+    private IColorEffectService _colorEffect;
+
     protected List<GameObject> childObjects;
 
     protected Dictionary<char, string> rules = new Dictionary<char, string>
@@ -125,8 +127,7 @@ public abstract class CoralGrowthBase : MonoBehaviour, ISpawnable, IColorable
                     }
 
                     transform.gameObject.SetActive(true);
-                    // TODO: inject IColorEffectService via VContainer instead of static Singleton call
-                    CoralColorManager.RegisterColorable(this);
+                    _colorEffect?.Register(this);
 
                     run = false;
                 }
@@ -136,6 +137,8 @@ public abstract class CoralGrowthBase : MonoBehaviour, ISpawnable, IColorable
             yield return new WaitForSeconds(10.0f);
         }
     }
+
+    public void SetColorEffectService(IColorEffectService service) => _colorEffect = service;
 
     public void SetStartPosition(Vector3 startPosition)
     {

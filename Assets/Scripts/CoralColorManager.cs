@@ -1,3 +1,5 @@
+// LEGACY — ersetzt durch CoralColorEffectService.
+// Noch in Riff.unity referenziert: Komponente manuell in Unity ersetzen, dann diese Datei löschen.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

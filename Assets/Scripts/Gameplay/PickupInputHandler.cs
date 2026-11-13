@@ -6,9 +6,7 @@ public class PickupInputHandler : MonoBehaviour
     {
         if (!Input.GetMouseButtonDown(0)) return;
 
-        Camera cam = Camera.main;
-        if (cam == null && Camera.allCameras.Length > 0)
-            cam = Camera.allCameras[0];
+        Camera cam = PS_TiltFive.Core.CameraHelper.Main;
         if (cam == null) return;
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);

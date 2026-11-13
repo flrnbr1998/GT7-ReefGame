@@ -25,7 +25,15 @@ public class FMODEvents : MonoBehaviour
     public EventReference saug
     { get; private set; }
 
-    public static FMODEvents instance { get; private set; }
+    // TODO: FMOD-Pfade aus FMOD Studio eintragen (z.B. "event:/Ambience/Underwater")
+public const string AmbiencePath   = "event:/Ambience/Underwater";   // TODO: verify
+public const string MusicPath      = "event:/Music/Main";             // TODO: verify
+public const string ChoralFactPath = "event:/SFX/ChoralFact";         // TODO: verify
+public const string PickUpTrashPath = "event:/SFX/PickUpTrash";       // TODO: verify
+public const string SplashPath     = "event:/SFX/Splash";             // TODO: verify
+public const string SaugPath       = "event:/SFX/Saug";               // TODO: verify
+
+public static FMODEvents instance { get; private set; }
 
     private void Awake()
     {

@@ -136,12 +136,9 @@ public class AudioManager : MonoBehaviour
         // musicEventInstance.setParameterByName("area", (float) area);
     }
 
-    public void PlayOneShot(EventReference sound, Vector3 worldPos)
+    public void PlayOneShot(string eventPath, Vector3 worldPos)
     {
-        var instance = CreateInstance(sound);
-        instance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPos));
-        instance.start();
-        instance.release();
+        RuntimeManager.PlayOneShot(eventPath, worldPos);
     }
 
     public EventInstance CreateInstance(EventReference eventReference)

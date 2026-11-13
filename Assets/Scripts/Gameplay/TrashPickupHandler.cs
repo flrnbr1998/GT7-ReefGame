@@ -47,10 +47,5 @@ public class TrashPickupHandler : MonoBehaviour
         }
     }
 
-    // Mirror original DestroyObject behaviour: use allCameras[0] as fallback
-    private static Camera FindCamera()
-    {
-        if (Camera.main != null) return Camera.main;
-        return Camera.allCameras.Length > 0 ? Camera.allCameras[0] : null;
-    }
+    private static Camera FindCamera() => PS_TiltFive.Core.CameraHelper.Main;
 }
