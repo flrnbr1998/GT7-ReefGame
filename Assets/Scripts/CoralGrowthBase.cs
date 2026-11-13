@@ -125,6 +125,7 @@ public abstract class CoralGrowthBase : MonoBehaviour, ISpawnable, IColorable
                     }
 
                     transform.gameObject.SetActive(true);
+                    // TODO: inject IColorEffectService via VContainer instead of static Singleton call
                     CoralColorManager.RegisterColorable(this);
 
                     run = false;

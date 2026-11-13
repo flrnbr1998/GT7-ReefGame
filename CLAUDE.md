@@ -171,6 +171,41 @@ Nächste Woche in der Vorlesung: **Event Storming + Physical Prototyping + Specc
 
 ---
 
+## Code-Qualität (SOLID / KISS / DRY)
+
+### Prinzipien im Überblick
+
+| Prinzip | Status | Wichtigste Regeln |
+|---------|--------|-------------------|
+| **S** Single Responsibility | ⚠️ teilweise | `TerrainSpawner` (3 Verantwortlichkeiten), `RiffGameLoop` (Fog + Music + Score-Reset) |
+| **O** Open/Closed | ✅ | CoralGrowthBase-Hierarchie offen für Erweiterung per Subklasse |
+| **L** Liskov | ✅ | Alle Subklassen von CoralGrowthBase substituierbar; StubAudioService vollständig |
+| **I** Interface Segregation | ✅ | Kleine Interfaces (IWellnessService 2 Methoden, IInputService 2 Methoden) |
+| **D** Dependency Inversion | ⚠️ bekannte Verstöße | Siehe TODO-Kommentare unten |
+
+### Bekannte D-Verstöße (mit TODO markiert)
+
+- `TrashSpawnerScript.cs:44` — `AudioManager.instance.PlayOneShot(...)` direkt → muss über `IAudioService` laufen
+- `CoralGrowthBase.cs:129` — `CoralColorManager.RegisterColorable(this)` → muss über injected `IColorEffectService` laufen
+
+### Verbindliche Coding-Regeln
+
+1. **Keine Editor-using in Runtime-Skripten** — nur in `Assets/Editor/` oder hinter `#if UNITY_EDITOR`
+2. **Interfaces immer in `Core/Interfaces/`** — nie im Root oder in Gameplay-Ordnern
+3. **Kein `FindObjectOfType<ConcreteType>()`** für injizierbare Services — `[Inject]` verwenden
+4. **Kein Singleton-Zugriff** (`AudioManager.instance`, `FMODEvents.instance`) in neuen Scripts — IAudioService per DI
+5. **Keine direkte MonoBehaviour-Abhängigkeit** in Services — nur Interface-Typen
+6. **Private Felder:** `_camelCase`-Konvention (wie in `PlayerController.cs`)
+7. **Keine Kommentare** außer bei nicht-offensichtlichem Why (Einschränkung, Workaround, Invariante)
+
+### DRY-Checkliste
+
+- **Camera-Zugriff:** `Camera.main ?? Camera.allCameras[0]` — an zentraler Stelle (CameraHelper) nicht duplizieren
+- **Spawn-Logik:** Kein Copy-Paste zwischen Coral- und Trash-Spawner
+- **PlayerControll.cs** — veraltet; `PlayerController.cs` ist der Ersatz. `PlayerControll1.cs` gelöscht (war vereinfachte Kopie ohne Terrain-Height-Sampling)
+
+---
+
 ## Git
 
 Aktiver Branch: `refactor/vcontainer-clean-arch`  

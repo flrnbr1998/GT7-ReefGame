@@ -41,6 +41,7 @@ public class TrashSpawnerScript : MonoBehaviour, ITrashSpawnService
         // Erzeuge das ausgewÃ¤hlte Objekt an der berechneten Spawn-Position ohne Drehung
         GameObject spawnedObject = Instantiate(objectsToSpawn[randomIndex], spawnPosition, Quaternion.identity);
         spawnedObjects.Add(spawnedObject);
+        // TODO: inject via VContainer (IAudioService) — D violation: direct Singleton access
         AudioManager.instance.PlayOneShot(FMODEvents.instance.pickUpTrash, spawnedObject.transform.position);
         return spawnedObject;
     }
